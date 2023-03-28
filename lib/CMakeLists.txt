@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 set(LIB_TARGET_NAME LibCryptoHistory)
 
-set(SOURCE_FILES "libcryptohistory/database.cpp")
+set(SOURCE_FILES "libcryptohistory/database.cpp" "libcryptohistory/trade.cpp")
 
 add_library(${LIB_TARGET_NAME} ${SOURCE_FILES})
 
