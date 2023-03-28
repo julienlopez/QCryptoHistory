@@ -25,25 +25,9 @@ QString toString(const LibCryptoHistory::Type type)
     return "";
 }
 
-auto loadTransactionsForCurrency(LibCryptoHistory::Database& database)
-{
-    return [&database](const std::vector<std::string>& currencies)
-               -> tl::expected<std::vector<LibCryptoHistory::Transaction>, std::string>
-    {
-        std::vector<LibCryptoHistory::Transaction> res;
-        for(const auto currency : currencies)
-        {
-            const auto transactions = database.transactions(currency);
-            if(not transactions) return tl::make_unexpected(transactions.error());
-            std::ranges::copy(*transactions, std::back_inserter(res));
-        }
-        return res;
-    };
-}
-
 tl::expected<std::vector<LibCryptoHistory::Transaction>, std::string> loadTransactions(LibCryptoHistory::Database& database)
 {
-    return database.currencies().and_then(loadTransactionsForCurrency(database));
+    return database.allTransactions();
 }
 
 } // namespace
@@ -101,7 +85,7 @@ QVariant FullTransactionModel::headerData(int section, Qt::Orientation orientati
 void FullTransactionModel::updateFromDatabase()
 {
     beginResetModel();
-    loadTransactions(m_database)
+    m_database.allTransactions()
         .map([this](auto transactions) { m_transactions = std::move(transactions); })
         .or_else([this](const std::string& error)
                  { qDebug() << tr("Error loading transactions : ") + QString::fromStdString(error); });

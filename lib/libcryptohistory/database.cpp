@@ -92,6 +92,22 @@ namespace
         };
     }
 
+    auto loadTransactionsForCurrency(LibCryptoHistory::Database& database)
+    {
+        return [&database](const std::vector<std::string>& currencies)
+                   -> tl::expected<std::vector<LibCryptoHistory::Transaction>, std::string>
+        {
+            std::vector<LibCryptoHistory::Transaction> res;
+            for(const auto currency : currencies)
+            {
+                const auto transactions = database.transactions(currency);
+                if(not transactions) return tl::make_unexpected(transactions.error());
+                std::ranges::copy(*transactions, std::back_inserter(res));
+            }
+            return res;
+        };
+    }
+
 } // namespace
 
 Result<Database> Database::open(const std::filesystem::path& file)
@@ -142,10 +158,10 @@ Result<std::vector<Transaction>> Database::transactions(const std::string& curre
         });
 }
 
-// unqlitepp::Database& Database::db()
-// {
-//     return m_db;
-// }
+Result<std::vector<Transaction>> Database::allTransactions()
+{
+    return currencies().and_then(loadTransactionsForCurrency(*this));
+}
 
 Database::Database(unqlitepp::Database db)
     : m_db{std::move(db)}

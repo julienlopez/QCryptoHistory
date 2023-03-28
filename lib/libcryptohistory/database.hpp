@@ -45,7 +45,7 @@ public:
 
     Result<std::vector<Transaction>> transactions(const std::string& currency);
 
-    // unqlitepp::Database& db();
+    Result<std::vector<Transaction>> allTransactions();
 
 private:
     unqlitepp::Database m_db;
