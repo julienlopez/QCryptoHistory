@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 set(LIB_TARGET_NAME LibCryptoHistory)
 
-set(SOURCE_FILES "libcryptohistory/database.cpp" "libcryptohistory/trade.cpp")
+set(SOURCE_FILES "libcryptohistory/database.cpp" "libcryptohistory/trade.cpp" "libcryptohistory/tradecomputer.cpp")
 
 add_library(${LIB_TARGET_NAME} ${SOURCE_FILES})
 
@@ -12,4 +12,3 @@ target_link_libraries(
   ${LIB_TARGET_NAME}
   PUBLIC unqlitepp::unqlitepp
   PRIVATE project_options)
-
