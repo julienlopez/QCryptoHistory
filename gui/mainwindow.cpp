@@ -1,10 +1,13 @@
 #include "mainwindow.hpp"
 
-#include "header.hpp"
 #include "fulltransactionmodel.hpp"
+#include "header.hpp"
+#include "tradesmodel.hpp"
 
-#include <QTableView>
+#include "libcryptohistory/tradecomputer.hpp"
+
 #include <QTabWidget>
+#include <QTableView>
 #include <QVBoxLayout>
 
 MainWindow::MainWindow(LibCryptoHistory::Database& database, QWidget* parent)
@@ -24,4 +27,17 @@ MainWindow::MainWindow(LibCryptoHistory::Database& database, QWidget* parent)
     full_tr_list->setModel(full_tr_model);
     tab_widget->addTab(full_tr_list, tr("Full listing"));
     connect(header, &Header::transactionAdded, full_tr_model, &FullTransactionModel::updateFromDatabase);
+
+    auto* trades_model = new TradesModel{this};
+    auto* trades_list = new QTableView;
+    trades_list->setModel(trades_model);
+    tab_widget->addTab(trades_list, tr("Trades"));
+
+    const auto update_models = [full_tr_model, trades_model]()
+    {
+        const auto& transactions = full_tr_model->updateFromDatabase();
+        trades_model->updateData(LibCryptoHistory::TradeComputer::analyze(transactions));
+    };
+    connect(header, &Header::transactionAdded, update_models);
+    update_models();
 }

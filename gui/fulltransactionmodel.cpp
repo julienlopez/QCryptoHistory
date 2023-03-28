@@ -2,8 +2,6 @@
 
 #include <libcryptohistory/database.hpp>
 
-#include <ranges>
-
 #include <QDateTime>
 
 namespace
@@ -25,27 +23,21 @@ QString toString(const LibCryptoHistory::Type type)
     return "";
 }
 
-tl::expected<std::vector<LibCryptoHistory::Transaction>, std::string> loadTransactions(LibCryptoHistory::Database& database)
-{
-    return database.allTransactions();
-}
-
 } // namespace
 
 FullTransactionModel::FullTransactionModel(LibCryptoHistory::Database& database, QObject* parent)
     : VectorModel<LibCryptoHistory::Transaction>{c_labels, parent}
     , m_database{database}
 {
-    updateFromDatabase();
 }
 
-void FullTransactionModel::updateFromDatabase()
+const std::vector<LibCryptoHistory::Transaction>& FullTransactionModel::updateFromDatabase()
 {
     m_database.allTransactions()
-        // .map([this](auto transactions) { m_transactions = std::move(transactions); })
         .map(std::bind_front(&FullTransactionModel::updateData, this))
         .or_else([this](const std::string& error)
                  { qDebug() << tr("Error loading transactions : ") + QString::fromStdString(error); });
+    return data();
 }
 
 QVariant FullTransactionModel::dataFromEntry(const LibCryptoHistory::Transaction& transaction, const int column_index) const

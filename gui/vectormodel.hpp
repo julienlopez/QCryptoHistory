@@ -56,6 +56,11 @@ public:
         endResetModel();
     }
 
+    const Container& data() const
+    {
+        return m_data;
+    }
+
     virtual QVariant dataFromEntry(const Data& data, const int column_index) const = 0;
 
 private:
