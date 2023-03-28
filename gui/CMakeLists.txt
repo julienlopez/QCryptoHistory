@@ -5,7 +5,7 @@ set(EXE_TARGET_NAME QCryptoHistory)
 
 find_package(Qt6 6.4 COMPONENTS Core REQUIRED)
 
-add_executable(${EXE_TARGET_NAME} "main.cpp" "mainwindow.cpp" "header.cpp" "fulltransactionlist.cpp" "fulltransactionmodel.cpp" "tradesmodel.cpp")
+add_executable(${EXE_TARGET_NAME} "main.cpp" "mainwindow.cpp" "header.cpp"  "fulltransactionmodel.cpp" "tradesmodel.cpp")
 
 set_target_properties(${EXE_TARGET_NAME} PROPERTIES AUTOMOC ON)
 
