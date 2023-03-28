@@ -33,6 +33,7 @@ option(UNQLITEPP_BUILD_EXAMPLE "Build the example executable")
 
 # subdirs
 add_subdirectory(lib)
+add_subdirectory(gui)
 
 option(BUILD_TESTING "Enable unit tests" ON)
 if(BUILD_TESTING)
