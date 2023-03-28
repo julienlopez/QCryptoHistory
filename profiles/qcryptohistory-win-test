@@ -1,0 +1,3 @@
+include(qcryptohistory-win-debug-shared)
+[options]
+qcryptohistory:build_testing=True

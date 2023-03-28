@@ -1,0 +1,3 @@
+include(qcryptohistory-win-test)
+[options]
+qcryptohistory:enable_msvc_code_analysis=True
