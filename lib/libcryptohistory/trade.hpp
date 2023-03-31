@@ -26,6 +26,8 @@ struct Trade
     bool isOpen() const;
 
     bool isClosed() const;
+
+    std::optional<double> result() const;
 };
 
 } // namespace LibCryptoHistory

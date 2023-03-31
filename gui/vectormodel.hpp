@@ -31,9 +31,9 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override
     {
         if(index.isValid() && index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
-           && index.column() < columnCount() && role == Qt::DisplayRole)
+           && index.column() < columnCount())
         {
-            return dataFromEntry(m_data[index.row()], index.column());
+            return dataFromEntry(m_data[index.row()], index.column(), role);
         }
         else
         {
@@ -61,7 +61,7 @@ public:
         return m_data;
     }
 
-    virtual QVariant dataFromEntry(const Data& data, const int column_index) const = 0;
+    virtual QVariant dataFromEntry(const Data& data, const int column_index, const int role) const = 0;
 
 private:
     QStringList m_header_labels;

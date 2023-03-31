@@ -40,8 +40,10 @@ const std::vector<LibCryptoHistory::Transaction>& FullTransactionModel::updateFr
     return data();
 }
 
-QVariant FullTransactionModel::dataFromEntry(const LibCryptoHistory::Transaction& transaction, const int column_index) const
+QVariant FullTransactionModel::dataFromEntry(const LibCryptoHistory::Transaction& transaction, const int column_index,
+                                             const int role) const
 {
+    if(role != Qt::DisplayRole) return {};
     switch(column_index)
     {
     case 0:
