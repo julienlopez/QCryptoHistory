@@ -1,6 +1,7 @@
 #include "tradesmodel.hpp"
 
 #include <QDateTime>
+#include <QLocale>
 
 namespace
 {
@@ -12,7 +13,8 @@ const static QStringList c_labels{TradesModel::tr("currency"),
                                   TradesModel::tr("opening price"),
                                   TradesModel::tr("closing price"),
                                   TradesModel::tr("opening timestamp"),
-                                  TradesModel::tr("closing timestamp")};
+                                  TradesModel::tr("closing timestamp"),
+                                  TradesModel::tr("result")};
 
 } // namespace
 
@@ -48,6 +50,15 @@ QVariant TradesModel::dataFromEntry(const LibCryptoHistory::Trade& transaction, 
     case 7:
         if(transaction.closing_details)
             return QDateTime::fromString(QString::fromStdString(transaction.closing_details->timestamp), Qt::ISODate);
+        else
+            return {};
+    case 8:
+        if(transaction.closing_details)
+        {
+            const auto diff = transaction.closing_details->total_value - transaction.opening_details.total_value;
+            const auto res = 100 * diff / transaction.opening_details.total_value;
+            return (res > 0 ? "+" : "") + QLocale::system().toString(res) + "%";
+        }
         else
             return {};
     }
