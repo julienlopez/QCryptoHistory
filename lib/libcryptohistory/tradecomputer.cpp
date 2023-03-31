@@ -18,7 +18,7 @@ TransactionContainer::const_iterator findOpeningOfATrade(const TransactionContai
 
 bool approx(const double v1, const double v2)
 {
-    return std::abs(v2 - v1) < v2 * 0.0001;
+    return std::abs(v2 - v1) < v2 * 0.001;
 }
 
 auto isMatchingClose(const Transaction& opening)
