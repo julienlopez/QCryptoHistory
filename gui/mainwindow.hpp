@@ -2,9 +2,11 @@
 
 #include <QMainWindow>
 
+class QAbstractItemModel;
+
 namespace LibCryptoHistory
 {
-    class Database;
+class Database;
 }
 
 class MainWindow : public QMainWindow
@@ -14,4 +16,6 @@ public:
 
     ~MainWindow() override = default;
 
+private:
+    static QWidget* createTradesView(QAbstractItemModel* model);
 };

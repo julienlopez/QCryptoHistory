@@ -31,14 +31,9 @@ MainWindow::MainWindow(LibCryptoHistory::Database& database, QWidget* parent)
     connect(header, &Header::transactionAdded, full_tr_model, &FullTransactionModel::updateFromDatabase);
 
     auto* trades_model = new TradesModel{this};
-    auto* trades_list = new QTableView;
     auto* trades_proxy_model = new QSortFilterProxyModel;
     trades_proxy_model->setSourceModel(trades_model);
-    trades_list->setModel(trades_proxy_model);
-    trades_list->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    trades_list->setSortingEnabled(true);
-    trades_list->sortByColumn(6, Qt::DescendingOrder);
-    tab_widget->addTab(trades_list, tr("Trades"));
+    tab_widget->addTab(createTradesView(trades_proxy_model), tr("Trades"));
 
     const auto update_models = [full_tr_model, trades_model]()
     {
@@ -47,4 +42,14 @@ MainWindow::MainWindow(LibCryptoHistory::Database& database, QWidget* parent)
     };
     connect(header, &Header::transactionAdded, update_models);
     update_models();
+}
+
+QWidget* MainWindow::createTradesView(QAbstractItemModel* model)
+{
+    auto* trades_list = new QTableView;
+    trades_list->setModel(model);
+    trades_list->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    trades_list->setSortingEnabled(true);
+    trades_list->sortByColumn(6, Qt::DescendingOrder);
+    return trades_list;
 }
