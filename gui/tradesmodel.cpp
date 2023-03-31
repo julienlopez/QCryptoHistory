@@ -29,12 +29,11 @@ TradesModel::TradesModel(QObject* parent)
 {
 }
 
-QVariant TradesModel::dataFromEntry(const LibCryptoHistory::Trade& transaction, const int column_index,
-                                    const int role) const
+QVariant TradesModel::dataFromEntry(const LibCryptoHistory::Trade& trade, const int column_index, const int role) const
 {
     if(role == Qt::BackgroundRole)
     {
-        const auto res = transaction.result();
+        const auto res = trade.result();
         if(res.has_value())
             return QBrush{res > 0 ? c_green_color : c_red_color};
         else
@@ -44,32 +43,32 @@ QVariant TradesModel::dataFromEntry(const LibCryptoHistory::Trade& transaction, 
     switch(column_index)
     {
     case 0:
-        return QString::fromStdString(transaction.currency);
+        return QString::fromStdString(trade.currency);
     case 1:
-        return transaction.opening_details.amount;
+        return trade.opening_details.amount;
     case 2:
-        return transaction.opening_details.total_value;
+        return trade.opening_details.total_value;
     case 3:
-        if(transaction.closing_details)
-            return transaction.closing_details->total_value;
+        if(trade.closing_details)
+            return trade.closing_details->total_value;
         else
             return {};
     case 4:
-        return transaction.opening_details.price;
+        return trade.opening_details.price;
     case 5:
-        if(transaction.closing_details)
-            return transaction.closing_details->price;
+        if(trade.closing_details)
+            return trade.closing_details->price;
         else
             return {};
     case 6:
-        return QDateTime::fromString(QString::fromStdString(transaction.opening_details.timestamp), Qt::ISODate);
+        return QDateTime::fromString(QString::fromStdString(trade.opening_details.timestamp), Qt::ISODate);
     case 7:
-        if(transaction.closing_details)
-            return QDateTime::fromString(QString::fromStdString(transaction.closing_details->timestamp), Qt::ISODate);
+        if(trade.closing_details)
+            return QDateTime::fromString(QString::fromStdString(trade.closing_details->timestamp), Qt::ISODate);
         else
             return {};
     case 8:
-        if(const auto res = transaction.result(); res.has_value())
+        if(const auto res = trade.result(); res.has_value())
             return (*res > 0 ? "+" : "") + QLocale::system().toString(100 * *res) + "%";
         else
             return {};
