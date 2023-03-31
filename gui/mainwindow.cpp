@@ -37,6 +37,7 @@ MainWindow::MainWindow(LibCryptoHistory::Database& database, QWidget* parent)
     trades_list->setModel(trades_proxy_model);
     trades_list->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     trades_list->setSortingEnabled(true);
+    trades_list->sortByColumn(6, Qt::DescendingOrder);
     tab_widget->addTab(trades_list, tr("Trades"));
 
     const auto update_models = [full_tr_model, trades_model]()
